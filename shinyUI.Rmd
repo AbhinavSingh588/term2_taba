@@ -1,0 +1,86 @@
+#
+# This is the user-interface definition of a Shiny web application. You can
+# run the application by clicking 'Run App' above.
+#
+# Find out more about building applications with Shiny here:
+#
+#    http://shiny.rstudio.com/
+#
+
+# UI Shiny App
+
+Input File : Load csv file from computer
+Output : will display based on user tab selection
+
+There are 6 tabs listed
+    1. Overview - provide guidance how to use the shiny app 
+    2.Corpus - To display the entire review content
+    3. Sentence Tokenization - It displays corpus in sentences
+    4. Keyword Search - Displays sentences based on keyword search
+    5. Word Cloud - It display the relative frequencies of the occurrence of the keywords as a word cloud
+    6. Bar Chart - Display the relative frequencies of the occurrence of the keywords in your corpus
+as a bar-chart
+
+The data is processed backend by the server and sent the result to the client to display.
+
+
+```{r}
+library(shiny)
+
+# Define UI for application that draws a histogram
+shinyUI(fluidPage(
+
+    titlePanel("keyword Sentences Match "),
+    
+    sidebarLayout( 
+        
+        sidebarPanel(  
+            
+            fileInput("file1", "Upload data (csv file with header)",  accept = c("text/csv",
+                                                                                 "text/comma-separated-values,text/plain",
+                                                                                 ".csv")),
+            
+            textInput("keywd", "Enter Keywords to search", value = "", width = NULL,
+                      placeholder = NULL) ),   # end of sidebar panel
+        
+        
+        mainPanel(
+            
+            tabsetPanel(type = "tabs",
+                        
+                        tabPanel("Overview",
+                                 h4(p("Data input")),
+                                 p("This app supports only comma separated values (.csv) data file. CSV data file should have headers and the first column of the file should have row names.",align="justify"),
+                                 p("Please refer to the link below for sample csv file."),
+                                 a(href="https://github.com/sudhir-voleti/sample-data-sets/blob/master/Segmentation%20Discriminant%20and%20targeting%20data/ConneCtorPDASegmentation.csv"
+                                   ,"Sample data input file"),   
+                                 br(),
+                                 h4('How to use this App'),
+                                 p('To use this app, click on', 
+                                   span(strong("Upload data (csv file with header)")),
+                                   'and uppload the csv data file. You can also change the number of clusters to fit in k-means clustering')),
+                        
+                        tabPanel("Data Corpus", 
+                               tableOutput("contents")),
+                        
+                        tabPanel("Data -keyword-filtered Corpus", 
+                                 tableOutput("kw")),
+                        
+                        tabPanel("Sentence Tokenization", 
+                                 tableOutput("sent")),
+                        
+                        tabPanel("Bar Chart",
+                                 plotOutput('bar')),
+                        
+                        tabPanel("Word Cloud",
+                                 plotOutput('wc'))
+            ) # end of tabsetPanel
+        )# end of main panel
+    ) # end of sidebarLayout
+)  # end if fluidPage
+) # end of UI
+
+
+```
+
+
